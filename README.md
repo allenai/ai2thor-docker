@@ -74,7 +74,7 @@ The Docker container is built with the highest version of CUDA that the host ver
 
 ## Example
 
-The following is code for the example agent that executes a single command ```RotateRight```.  The only requirement for the Controller to run is ```setup_env()``` must be called in order to configure and run the Xorg server.
+The following is code for the example agent that executes a single command ```RotateRight```.  The only requirement for the Controller to run is ```setup_env()``` must be called in order to configure and run the Xorg server prior to constructing the Controller.
 
 ```python
 import os
