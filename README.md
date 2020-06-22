@@ -4,180 +4,101 @@
 
 --------------------------------------------------------------------------------
 
-# RoboTHOR-Challenge
+# AI2-Thor Docker
 
-Welcome to the RoboTHOR Challenge. The task for the RoboTHOR Challenge is to build a model/agent that can navigate towards a particular object in a room using the [RoboTHOR](https://ai2thor.allenai.org) embodied agent environment. Please follow the instructions below to get started.
+AI2-Thor Docker is a mini-framework that simpflifies the task of running [AI2-Thor](https://ai2thor.allenai.org) within Docker. The primary feature this adds is configuring and running a X server to be used by Unity3d to render scenes. 
 
-## Installation
+## Getting Started
 
-To begin working on your own model you must have Docker installed on your host and a Nvidia GPU (required for 3D rendering).
+To use AI2-Thor Docker you must have Docker installed on your host and a Nvidia GPU (required for 3D rendering).
 
 
 Clone or fork this repository
 ```bash
-git clone https://github.com/allenai/robothor-challenge
+git clone https://github.com/allenai/ai2thor-docker
 ```
 
 Build the Docker container
 ```
-cd robothor-challenge
+cd ai2thor-docker
 ./scripts/build.sh
 ```
 
-Run evaluation on random agent
+Run the example agent
 ```
-./scripts/evaluate_train.sh
-```
-
-At this point you should see log messages that resemble the following:
-```
-2020-02-11 05:08:00,545 [INFO] robothor_challenge - Task Start id:59 scene:FloorPlan_Train1_1 target_object:BaseballBat|+04.00|+00.04|-04.77 initial_position:{'x': 7.25, 'y': 0.910344243, 'z': -4.708334} rotation:180
-2020-02-11 05:08:00,895 [INFO] robothor_challenge - Agent action: MoveAhead
-2020-02-11 05:08:00,928 [INFO] robothor_challenge - Agent action: RotateLeft
-2020-02-11 05:08:00,961 [INFO] robothor_challenge - Agent action: MoveBack
-2020-02-11 05:08:00,989 [INFO] robothor_challenge - Agent action: Stop
+./scripts/run.sh
 ```
 
-## Model
+At this point you should see output that resembles the following: 
+```
+X.Org X Server 1.19.6
+Release Date: 2017-12-20
+X Protocol Version 11, Revision 0
+Build Operating System: Linux 4.4.0-168-generic x86_64 Ubuntu
+Current Operating System: Linux 6b162ce5c20d 4.15.0-62-generic #69-Ubuntu SMP Wed Sep 4 20:55:53 UTC 2019 x86_64
+Kernel command line: BOOT_IMAGE=/boot/vmlinuz-4.15.0-62-generic root=UUID=0957189b-8526-4d31-b273-91e88970be46 ro quiet splash vt.handoff=1
+Build Date: 14 November 2019  06:20:00PM
+xorg-server 2:1.19.6-1ubuntu4.4 (For technical support please see http://www.ubuntu.com/support) 
+Current version of pixman: 0.34.0
+	Before reporting problems, check http://wiki.x.org
+	to make sure that you have the latest version.
+Markers: (--) probed, (**) from config file, (==) default setting,
+	(++) from command line, (!!) notice, (II) informational,
+	(WW) warning, (EE) error, (NI) not implemented, (??) unknown.
+(==) Log file: "/var/log/Xorg.0.log", Time: Mon Jun 22 20:04:29 2020
+(++) Using config file: "/tmp/tmpzrlxrl5r"
+(==) Using system config directory "/usr/share/X11/xorg.conf.d"
+Found path: /root/.ai2thor/releases/thor-Linux64-202006081330/thor-Linux64-202006081330
+Mono path[0] = '/root/.ai2thor/releases/thor-Linux64-202006081330/thor-Linux64-202006081330_Data/Managed'
+Mono config path = '/root/.ai2thor/releases/thor-Linux64-202006081330/thor-Linux64-202006081330_Data/MonoBleedingEdge/etc'
+Unable to preload the following plugins:
+	ScreenSelector.so
+Display 0 '0': 1024x768 (primary device).
+Display 1 '1': 1024x768 (secondary device).
+Display 2 '2': 1024x768 (secondary device).
+PlayerPrefs - Creating folder: /root/.config/unity3d/Allen Institute for Artificial Intelligence
+PlayerPrefs - Creating folder: /root/.config/unity3d/Allen Institute for Artificial Intelligence/AI2-Thor
+Logging to /root/.config/unity3d/Allen Institute for Artificial Intelligence/AI2-Thor/Player.log
+Initialize return: {'cameraNearPlane': 0.1, 'cameraFarPlane': 20.0}
+{'cameraHorizon': 0.0,
+ 'inHighFrictionArea': False,
+ 'isStanding': True,
+ 'name': 'agent',
+ 'position': {'x': -1.5, 'y': 0.9009982347488403, 'z': -1.5},
+ 'rotation': {'x': 0.0, 'y': 270.0, 'z': 0.0}}
+```
 
-Your model must subclass ```robothor_challenge.agent.Agent``` and implement the method ```act```. For an episode to be successful, the agent must be within 1 meter of the target object and the object must also be visible to the agent.  To declare success, respond with the ```Stop``` action.  If ```Stop``` is not sent within the maxmimum number of steps (100 max), the episode will be considered failed and the next episode will be initialized.  The following agent (found in example_agent.py) takes a random action on each event:
+## Docker
+
+The Docker container is built with the highest version of CUDA that the host version's Nvidia driver will support.  In order to train/execute a model it must either be explicitly copied into the container by adding an entry into the Dockerfile or by sharing a volume with your code to the container. 
+
+## Example
+
+The following is code for the example agent that executes a single command ```RotateRight```.  The only requirement for the Controller to run is ```setup_env()``` must be called in order to configure and run the Xorg server.
 
 ```python
-from robothor_challenge.agent import Agent
-from robothor_challenge import RobothorChallenge
-import random
-import logging
-logging.getLogger().setLevel(logging.INFO)
+import os
+from pprint import pprint
+import time
+import threading
+from ai2thor_docker.x_server import startx
+import ai2thor.controller
+
+def setup_env():
+    if 'DISPLAY' not in os.environ:
+        xthread = threading.Thread(target=startx)
+        xthread.daemon = True
+        xthread.start()
+        # wait for server to start
+        time.sleep(4)
 
 
-class SimpleRandomAgent(Agent):
-
-    def reset(self):
-        pass
-
-    def act(self, observations):
-        # observations contains the following keys: rgb(numpy RGB frame), depth (None by default), object_goal(category of target object)
-        action = random.choice(['MoveAhead', 'MoveBack', 'RotateRight', 'RotateLeft', 'LookUp', 'LookDown', 'Stop'])
-        return action
 
 if __name__ == '__main__':
-    agent = SimpleRandomAgent()
-    r = RobothorChallenge(agent=agent)
-    r.inference()
-```
-
-Each episode has the following structure:
-```javascript
- {
-        "difficulty": "easy", // Task difficulty
-        "id": 0,
-        "initial_orientation": 180, // Initial orientation of the agent
-        "initial_position": { // Initial position of the agent
-            "x": 3.0,
-            "y": 0.910344243,
-            "z": -1.75
-        },
-        "object_id": "Apple|+01.98|+00.77|-01.75", // Id of the target object
-        "object_type": "Apple", // Target object category
-        "scene": "FloorPlan_Train1_1", // Name of the scene
-        "shortest_path": [ // Coordinates of the points along the shortest path
-            {
-                "x": 3.0,
-                "y": 0.0103442669,
-                "z": -1.75
-            },
-            {
-                "x": 2.75,
-                "y": 0.0103442669,
-                "z": -1.75
-            }
-        ],
-        "shortest_path_length": 0.25, // Length of the shortest path
-        "target_position": { // Position of the target
-            "x": 1.979,
-            "y": 0.7714,
-            "z": -1.753
-        }
-}
+    setup_env()
+    controller = ai2thor.controller.Controller(scene='FloorPlan28')
+    event = controller.step(action='RotateRight')
+    pprint(event.metadata['agent'])
 
 ```
-
-When you have a model to evaluate, modify the Dockerfile to copy any files and update the requirements.txt as needed. Once you have built the image, you can run the evaluation script to calculate the SPL value.
-
-## Dataset
-
-The dataset consists of 27595 training episodes and 6116 val episodes where each episode consists of an agent starting position/rotation and target object.  
-
-The following target object types exist in the dataset:
-* Alarm Clock
-* Apple
-* Baseball Bat
-* Basketball
-* Bowl
-* Garbage Can
-* House Plant
-* Laptop
-* Mug
-* Spray Bottle
-* Television
-* Vase
-
-| Split | Difficulty | Total |
-| ----- |:----------:|:-----:|
-|Train|easy| 8939 | 
-|Train|medium| 8939 | 
-|Train|hard| 9717| 
-|Val|easy| 1974 | 
-|Val|medium| 1974 | 
-|Val|hard| 2168 | 
-
-
-
-All the episodes for each split (train/val) can be found within the dataset/{train/val}.json files.  Configuration parameters for the environment can be found within dataset/challenge_config.yaml.  These are the same values that will be used for generating the leaderboard.  You are free to train your model with whatever parameters you choose, but these params will be reset to the original values for leaderboard evaluation.
-
-## Dataset Utility Functions
-
-Once you've created your agent class:
-
-```python
-agent = SimpleRandomAgent()
-r = RobothorChallenge(agent=agent)
-```
-
-You can move to points in the dataset by calling the following functions in the `RobothorChallenge` class:
-
-
-To move to a random point in the dataset for a particular `scene` and `object_type`:
-
-```python
-event = r.move_to_random_dataset_point("FloorPlan_Train2_1", "Apple")
-```
-
-Useful if you load the dataset yourself, to move to a specific dataset point:
-
-```python
-event = r.move_to_point(datasetpoint)
-```
-Where `datapoint` is an entry in the json dataset.
-
-To move to a random point in the scene, given by the [`GetReachablePositions`](https://ai2thor.allenai.org/robothor/documentation/#get-reachable-positions) unity function:
-
-```python
-event = r.move_to_random_point("FloorPlan_Train1_1", y_rotation=180)
-```
-
-All of these return an `Event Object` with the frame and metadata (see: [documentation](https://ai2thor.allenai.org/robothor/documentation/#metadata)). This is the data you will likely use for training.
-
-To test the `RobothorChallenge` class make sure you set the environment variables `CHALLENGE_SPLIT` with `train` or `val`, and `CHALLENGE_CONFIG` to point to a challenge config yaml file. e.g. from the repo's root `./dataset/challenge_config.yaml`. This is set by the [evaluate_train](./scripts/evaluate_train.sh) script to run with docker.
-
-## Challenge Submissions
-
-We will be using [EvalAI](https://evalai.cloudcv.org) to host the challenge. You will be submitting your docker image for evaluation using the [EvalAI CLI](https://evalai-cli.cloudcv.org/).  During leaderboard evaluation, separate scenes/points will be used to determine your score.
-
-To submit your models, please follow the [challenge submission link](https://evalai.cloudcv.org/web/challenges/challenge-page/558/overview).
-
-
-## Acknowledgments
-
-We would like to thank [Rishabh Jain](https://rishabhjain.xyz/) for the help for setting up the EvalAI leaderboard.
 
