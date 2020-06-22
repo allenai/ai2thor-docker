@@ -1,5 +1,5 @@
 <p align="center">
-  <img width = "50%" src='/images/robothor_challenge_logo.svg' />
+  <img width = "50%" src='/doc/static/thor-logo-main_1.0_thick.png' />
   </p>
 
 --------------------------------------------------------------------------------
