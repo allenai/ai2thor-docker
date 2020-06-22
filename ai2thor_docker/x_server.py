@@ -1,4 +1,5 @@
 import subprocess
+import time
 import shlex
 import re
 import atexit
@@ -62,7 +63,7 @@ EndSection
     output =  "\n".join(xorg_conf)
     return output
 
-def startx(display=0):
+def _startx(display):
     if platform.system() != 'Linux':
         raise Exception("Can only run startx on linux")
 
@@ -87,6 +88,19 @@ def startx(display=0):
     finally: 
         os.close(fd)
         os.unlink(path)
+
+def startx(display=0):
+    if 'DISPLAY' in os.environ:
+        print("Skipping Xorg server - DISPLAY is already running at %s" % os.environ['DISPLAY'])
+        return
+
+    xthread = threading.Thread(target=_startx, args=(display,))
+    xthread.daemon = True
+    xthread.start()
+    # wait for server to start
+    time.sleep(4)
+
+
 
     
 
