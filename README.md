@@ -13,21 +13,24 @@ AI2-Thor Docker is a mini-framework that simpflifies the task of running [AI2-Th
 To use AI2-Thor Docker you must have Docker installed on your host and a Nvidia GPU (required for 3D rendering).
 
 
-Clone or fork this repository
-```bash
-git clone https://github.com/allenai/ai2thor-docker
-```
+1. Clone or fork this repository.
 
-Build the Docker container
-```
-cd ai2thor-docker
-./scripts/build.sh
-```
+   ```bash
+   git clone https://github.com/allenai/ai2thor-docker
+   ```
 
-Run the example agent
-```
-./scripts/run.sh
-```
+2. Build the Docker container.
+
+   ```
+   cd ai2thor-docker
+   ./scripts/build.sh
+   ```
+
+3. Run the example agent using Docker.
+
+   ```
+   ./scripts/run.sh
+   ```
 
 At this point you should see output that resembles the following: 
 ```
