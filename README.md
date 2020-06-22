@@ -70,7 +70,7 @@ Initialize return: {'cameraNearPlane': 0.1, 'cameraFarPlane': 20.0}
 
 ## Docker
 
-The Docker container is built with the highest version of CUDA that the host version's Nvidia driver will support.  In order to train/execute a model it must either be explicitly copied into the container by adding an entry into the Dockerfile or by sharing a volume with your code to the container. 
+The Docker container is built with the highest version of CUDA that the host version's Nvidia driver will support.  In order to train/execute a model the code must either be explicitly copied into the container by adding an entry into the Dockerfile or by sharing a volume with your code to the container (see ./scripts/run.sh). 
 
 ## Example
 
