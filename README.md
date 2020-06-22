@@ -6,11 +6,11 @@
 
 # AI2-Thor Docker
 
-AI2-Thor Docker is a mini-framework that simpflifies the task of running [AI2-Thor](https://ai2thor.allenai.org) within Docker. The primary feature this adds is configuring and running a X server to be used by Unity3d to render scenes. 
+AI2-THOR Docker is a mini-framework that simpflifies the task of running [AI2-THOR](https://ai2thor.allenai.org) within Docker. The primary feature this adds is configuring and running a X server to be used by Unity3d to render scenes. 
 
 ## Getting Started
 
-To use AI2-Thor Docker you must have Docker installed on your host and a Nvidia GPU (required for 3D rendering).
+To use AI2-THOR Docker you must have Docker installed on your host and a Nvidia GPU (required for 3D rendering).
 
 
 1. Clone or fork this repository.
