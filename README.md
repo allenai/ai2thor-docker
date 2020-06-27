@@ -6,7 +6,7 @@
 
 # AI2-THOR Docker
 
-AI2-THOR Docker is a mini-framework that simpflifies the task of running [AI2-THOR](https://ai2thor.allenai.org) within Docker. The primary feature this adds is configuring and running a X server to be used by Unity3d to render scenes. 
+AI2-THOR Docker is a mini-framework that simplifies the task of running [AI2-THOR](https://ai2thor.allenai.org) within Docker. The primary feature this adds is configuring and running a X server to be used by Unity3d to render scenes. 
 
 ## Getting Started
 
