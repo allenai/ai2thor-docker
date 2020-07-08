@@ -4,10 +4,14 @@ import subprocess
 import os
 import glob
 import tempfile
+import platform
 
 
 @task
 def extract_store_nvidia_driver(context, cuda_url):
+    if platform.system() != "Linux":
+        raise Exception("CUDA driver extraction can only be run on Linu")
+
     name = os.path.basename(cuda_url)
     subprocess.run("wget -O '%s' '%s'" % (name, cuda_url), shell=True)
     os.chmod(name, 0o755)
