@@ -10,7 +10,8 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY requirements.txt scripts/install_nvidia.sh /app/
 RUN pip3 install --upgrade pip
-RUN pip3 install -r requirements.txt && python3 -c "import ai2thor.controller; ai2thor.controller.Controller(download_only=True)"
+
+RUN pip3 install -r requirements.txt && python3 -c "import os; import ai2thor.build; ai2thor.build.Build('Linux64', ai2thor.build.COMMIT_ID, False, releases_dir=os.path.join(os.path.expanduser('~'), '.ai2thor/releases')).download()"
 RUN NVIDIA_VERSION=$NVIDIA_VERSION /app/install_nvidia.sh
 
 COPY ai2thor_docker /app/ai2thor_docker
