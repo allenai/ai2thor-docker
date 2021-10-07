@@ -1,12 +1,9 @@
-from ai2thor_docker.x_server import startx
 import ai2thor.controller
-import os
-import time
+import ai2thor.platform
 from pprint import pprint
 
 
 if __name__ == '__main__':
-    startx()
-    controller = ai2thor.controller.Controller(scene='FloorPlan28')
+    controller = ai2thor.controller.Controller(platform=ai2thor.platform.CloudRendering, scene='FloorPlan28')
     event = controller.step(action='RotateRight')
     pprint(event.metadata['agent'])

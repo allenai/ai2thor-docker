@@ -14,7 +14,15 @@ NVIDIA_MAJOR=`echo $NVIDIA_VERSION | tr "." "\n" | head -1  | tr -d "\n"`
 NVIDIA_MINOR=`echo $NVIDIA_VERSION | tr "." "\n" | head -2  | tail -1| tr -d "\n"`
 
 # https://docs.nvidia.com/deploy/cuda-compatibility/index.html#binary-compatibility__table-toolkit-driver
-if (( $NVIDIA_MAJOR >= 450 && $NVIDIA_MINOR >= 36 )); then
+if (( $NVIDIA_MAJOR >= 470 && $NVIDIA_MINOR >= 42 )); then
+    CUDA_VERSION=11.4.2
+elif (( $NVIDIA_MAJOR >= 465 && $NVIDIA_MINOR >= 19 )); then
+    CUDA_VERSION=11.3.1
+elif (( $NVIDIA_MAJOR >= 460 && $NVIDIA_MINOR >= 27 )); then
+    CUDA_VERSION=11.2.2
+elif (( $NVIDIA_MAJOR >= 450 && $NVIDIA_MINOR >= 80 )); then
+    CUDA_VERSION=11.1
+elif (( $NVIDIA_MAJOR >= 450 && $NVIDIA_MINOR >= 36 )); then
     CUDA_VERSION=11.0
 elif (( $NVIDIA_MAJOR >= 440 && $NVIDIA_MINOR >= 33 )); then
     CUDA_VERSION=10.2
