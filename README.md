@@ -77,16 +77,14 @@ The Docker container is built with the highest version of CUDA that the host ver
 
 ## Example
 
-The following is code for the example agent that executes a single command ```RotateRight```.  The only requirement for the Controller to run is ```startx()``` must be called in order to configure and run the Xorg server prior to constructing the Controller.
+The following is code for the example agent that executes a single command ```RotateRight```.  
 
 ```python
 from pprint import pprint
-from ai2thor_docker.x_server import startx
 import ai2thor.controller
 
 
 if __name__ == '__main__':
-    startx()
     controller = ai2thor.controller.Controller(scene='FloorPlan28')
     event = controller.step(action='RotateRight')
     pprint(event.metadata['agent'])
