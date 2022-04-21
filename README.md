@@ -34,31 +34,7 @@ To use AI2-THOR Docker you must have Docker installed on your host and a Nvidia 
 
 At this point you should see output that resembles the following: 
 ```
-X.Org X Server 1.19.6
-Release Date: 2017-12-20
-X Protocol Version 11, Revision 0
-Build Operating System: Linux 4.4.0-168-generic x86_64 Ubuntu
-Current Operating System: Linux 6b162ce5c20d 4.15.0-62-generic #69-Ubuntu SMP Wed Sep 4 20:55:53 UTC 2019 x86_64
-Kernel command line: BOOT_IMAGE=/boot/vmlinuz-4.15.0-62-generic root=UUID=0957189b-8526-4d31-b273-91e88970be46 ro quiet splash vt.handoff=1
-Build Date: 14 November 2019  06:20:00PM
-xorg-server 2:1.19.6-1ubuntu4.4 (For technical support please see http://www.ubuntu.com/support) 
-Current version of pixman: 0.34.0
-	Before reporting problems, check http://wiki.x.org
-	to make sure that you have the latest version.
-Markers: (--) probed, (**) from config file, (==) default setting,
-	(++) from command line, (!!) notice, (II) informational,
-	(WW) warning, (EE) error, (NI) not implemented, (??) unknown.
-(==) Log file: "/var/log/Xorg.0.log", Time: Mon Jun 22 20:04:29 2020
-(++) Using config file: "/tmp/tmpzrlxrl5r"
-(==) Using system config directory "/usr/share/X11/xorg.conf.d"
-Found path: /root/.ai2thor/releases/thor-Linux64-202006081330/thor-Linux64-202006081330
-Mono path[0] = '/root/.ai2thor/releases/thor-Linux64-202006081330/thor-Linux64-202006081330_Data/Managed'
-Mono config path = '/root/.ai2thor/releases/thor-Linux64-202006081330/thor-Linux64-202006081330_Data/MonoBleedingEdge/etc'
-Unable to preload the following plugins:
-	ScreenSelector.so
-Display 0 '0': 1024x768 (primary device).
-Display 1 '1': 1024x768 (secondary device).
-Display 2 '2': 1024x768 (secondary device).
+
 PlayerPrefs - Creating folder: /root/.config/unity3d/Allen Institute for Artificial Intelligence
 PlayerPrefs - Creating folder: /root/.config/unity3d/Allen Institute for Artificial Intelligence/AI2-Thor
 Logging to /root/.config/unity3d/Allen Institute for Artificial Intelligence/AI2-Thor/Player.log
